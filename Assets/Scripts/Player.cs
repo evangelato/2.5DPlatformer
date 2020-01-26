@@ -14,10 +14,17 @@ public class Player : MonoBehaviour
     private Vector3 _moveDirection = Vector3.zero;
     [SerializeField]
     private bool _hasDoubleJump = false;
+    private int _coinNum = 0;
+    private UIManager _uiManager;
     
     // Start is called before the first frame update
     void Start()
     {
+        _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
+        if (_uiManager == null)
+        {
+            Debug.LogError("Player: The UI Manager is NULL");
+        }
         _characterController = GetComponent<CharacterController>();
     }
 
@@ -54,5 +61,11 @@ public class Player : MonoBehaviour
         _moveDirection.y -= _gravity * Time.deltaTime;
         _characterController.Move(_moveDirection * Time.deltaTime);
 
+    }
+
+    public void onCoinCollect() 
+    {
+        _coinNum ++;
+        _uiManager.UpdateCoin(_coinNum);
     }
 }
