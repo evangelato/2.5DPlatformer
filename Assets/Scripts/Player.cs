@@ -16,6 +16,11 @@ public class Player : MonoBehaviour
     private bool _hasDoubleJump = false;
     private int _coinNum = 0;
     private UIManager _uiManager;
+    private GameManager _gameManager;
+    [SerializeField]
+    private int _lives = 3;
+    [SerializeField]
+    private GameObject _respawnLocation;
     
     // Start is called before the first frame update
     void Start()
@@ -25,13 +30,38 @@ public class Player : MonoBehaviour
         {
             Debug.LogError("Player: The UI Manager is NULL");
         }
+        _gameManager = GameObject.Find("Game_Manager").GetComponent<GameManager>();
+        if (_gameManager == null)
+        {
+
+            Debug.LogError("Player: The Game Manager is NULL");
+        }
         _characterController = GetComponent<CharacterController>();
+
+        _uiManager.UpdateLivesDisplay(_lives);
     }
 
     // Update is called once per frame
     void Update()
     {
-        CalculateMovement();
+        if (transform.position.y < -5f) 
+        {
+            _characterController.enabled = false;
+            _lives--;
+            if (_lives <= 0)
+            {
+                _gameManager.RestartGame();
+            } 
+            else {
+                transform.position = _respawnLocation.transform.position;
+                _uiManager.UpdateLivesDisplay(_lives);
+            }
+            _characterController.enabled = true;
+        } else {
+            CalculateMovement();
+        }
+        
+        
     }
 
     void CalculateMovement()
@@ -66,6 +96,7 @@ public class Player : MonoBehaviour
     public void onCoinCollect() 
     {
         _coinNum ++;
-        _uiManager.UpdateCoin(_coinNum);
+        _uiManager.UpdateCoinDisplay(_coinNum);
     }
+
 }

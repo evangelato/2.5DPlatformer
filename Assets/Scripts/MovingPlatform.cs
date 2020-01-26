@@ -46,11 +46,6 @@ public class MovingPlatform : MonoBehaviour
         }
     }
 
-    //Collision detection with player
-    // take player parent = this game object
-    // exit collision
-    // check if the player exited
-    // take the player parent = null
 
 
 }
